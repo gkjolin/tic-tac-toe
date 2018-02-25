@@ -142,7 +142,10 @@ public class GameController : MonoBehaviour {
                 winText.color = xColor;
 
                 Debug.Log("X wins");
-            } else if (oRowScore == 3 || oColScore == 3 || oMainDiagScore == 3 || oSecDiagScore == 3)
+
+                break;
+            }
+            else if (oRowScore == 3 || oColScore == 3 || oMainDiagScore == 3 || oSecDiagScore == 3)
             {
                 SetGameOnGameOver();
 
@@ -150,30 +153,6 @@ public class GameController : MonoBehaviour {
                 winText.color = oColor;
 
                 Debug.Log("O wins");
-            } else if (turnsCount == 9)
-            {
-                SetGameOnGameOver();
-                winLine.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f); //to hide win line when tie
-
-                winText.text = tieTextStr;
-                winText.color = Color.white;
-
-                Debug.Log("TIE");
-
-                break;
-            }
-
-            //to determine the win line
-            if (curGameState == GameState.GAME_OVER)
-            {
-                LineType lineType;
-
-                if(curPlayerSymbol == PlayerSymbol.X)
-                    lineType = CheckWinLineType(xRowScore, xColScore, xMainDiagScore, xSecDiagScore);
-                else
-                    lineType = CheckWinLineType(oRowScore, oColScore, oMainDiagScore, oSecDiagScore);
-
-                GenerateWinLine(lineType);
 
                 break;
             }
@@ -183,6 +162,29 @@ public class GameController : MonoBehaviour {
             xColScore = 0;
             oColScore = 0;
         }
+
+        if (curGameState == GameState.GAME_OVER) //If game is over - create a win line.
+        {
+            LineType lineType;
+
+            if (curPlayerSymbol == PlayerSymbol.X)
+                lineType = CheckWinLineType(xRowScore, xColScore, xMainDiagScore, xSecDiagScore);
+            else
+                lineType = CheckWinLineType(oRowScore, oColScore, oMainDiagScore, oSecDiagScore);
+
+            GenerateWinLine(lineType);
+        }
+        else if (turnsCount == 9) //If game isn't over and field is full - tie.
+        {
+            SetGameOnGameOver();
+            winLine.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f); //to hide win line when tie
+
+            winText.text = tieTextStr;
+            winText.color = Color.white;
+
+            Debug.Log("TIE");
+        }
+
     }
 
     /// <summary>
